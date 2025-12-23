@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
  import { authService,  } from "./auth.service";
-import { pool } from "../../config/db";
-
+ 
 const singupUser = async (req: Request, res: Response) => {
 
     try {
@@ -23,20 +22,11 @@ const singupUser = async (req: Request, res: Response) => {
  const SinginUser = async (req: Request, res: Response) => {
     const { email, password } = req.body;
     try {
-        const result = await pool.query(`
-        SELECT  *
-       FROM users 
-       WHERE email = $1, password = $2 RETURNING *`, [email, password])
-        if (result.rows.length === 0) {
-            return res.status(401).json({
-                success: false,
-                message: "Invalid email or password",
-            });
-        }
+        const result = await authService.singinUser(email,password) 
         res.status(200).json({
-            success: true,
+            success:true,
             message: "User login successfully",
-            data: result.rows[0]
+            data: result
         })
     } catch (err: any) {
         res.status(500).json({

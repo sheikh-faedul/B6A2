@@ -60,9 +60,9 @@ const getAllVehicles =async(req:Request,res:Response)=>{
   }
 
   const updatesVehicles =async(req:Request,res:Response)=>{
-     const {daily_rent_price,availability_status}=req.body;
+     const {availability_status}=req.body;
     try{
-           const result = await vehiclesService.updatesVehicles(daily_rent_price,availability_status,req.params.id as string)
+           const result = await vehiclesService.updatesVehicles(availability_status,req.params.id as string)
   
       if(result.rows.length === 0){
            res.status(404).json({

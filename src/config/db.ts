@@ -6,6 +6,7 @@ export const pool = new Pool({
 })
 
 const initDB = async () => {
+    // user DB
     await pool.query(`
         CREATE TABLE IF NOT EXISTS users(
         id SERIAL PRIMARY KEY,
@@ -18,7 +19,7 @@ const initDB = async () => {
         
     )
         `)
-
+// vehicles DB
     await pool.query(`
             CREATE TABLE IF NOT EXISTS vehicles(
             id SERIAL PRIMARY KEY,
@@ -27,11 +28,11 @@ const initDB = async () => {
             CHECK (type IN ('car', 'bike', 'van', 'SUV')),
             registration_number VARCHAR(50) NOT NULL UNIQUE,
             daily_rent_price INTEGER NOT NULL CHECK (daily_rent_price >= 0),
-            availability_status VARCHAR(10) NOT NULL 
+            availability_status VARCHAR(10) NOT NULL DEFAULT 'available'
             CHECK (availability_status IN ('available', 'booked'))
             )
             `)
-
+// bookings DB
     await pool.query(`
         CREATE TABLE IF NOT EXISTS bookings(
         id SERIAL PRIMARY KEY,
