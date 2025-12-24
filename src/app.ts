@@ -1,5 +1,5 @@
-import express, { request, Request, Response } from 'express'
- import config from './config';
+import express  from 'express'
+  
 import initDB, { pool } from './config/db';
 import { authRouter  } from './modules/auth/auth.routes';
 import { customerRouter } from './modules/customer/customer.routes';
