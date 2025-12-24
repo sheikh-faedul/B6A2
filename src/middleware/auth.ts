@@ -6,7 +6,8 @@ import config from '../config';
 const auth =(...role:string[])=>{
     return async(req:Request,res:Response,next:NextFunction)=>{
       try{
-        const token = req.headers.authorization;
+        const tokenHeader = req.headers.authorization;
+        const token =tokenHeader?.split(' ')[1];
        if(!token){
         return res.status(500).json({
             message:'user not Authenticated'

@@ -25,12 +25,12 @@ const singinUser =async(email:string,password:string)=>{
         }
         const user = result.rows[0];
         const match = await bcrypt.compare(password,user.password)
-        console.log(match,user)
+         
         if(!match){
             return false;
         }
      const secret =config.jwt_secret as string;
-        const token = jwt.sign({name:user.name,email:user.email,role:user.role},secret,{
+        const token = jwt.sign({id:user.id,name:user.name,email:user.email,role:user.role},secret,{
             expiresIn:'30d'
         })
         
