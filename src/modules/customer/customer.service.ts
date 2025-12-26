@@ -6,7 +6,7 @@ const getUser = async () => {
     const result = await pool.query(`
     SELECT * FROM users
     `)
-    return result
+    return result.rows
 }
 
 const updateUser = async (name: string, role: string, tokenID: string, id: string) => {
@@ -22,7 +22,7 @@ const updateUser = async (name: string, role: string, tokenID: string, id: strin
         const update = await pool.query(`
              UPDATE users SET name=$1 WHERE id=$2 RETURNING *
             `,[name,id]);
-          return update  
+          return update.rows[0]  
     }
     throw new Error("Unauthorizes");
 
@@ -43,7 +43,7 @@ const  bookingStatus  = await pool.query(`
     const result = await pool.query(`
     DELETE FROM users WHERE id=$1
     `, [id])
-    return result
+    return result.rows[0]
 }
 
 export const customerServices = {

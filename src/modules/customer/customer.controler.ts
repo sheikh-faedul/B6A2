@@ -7,7 +7,7 @@ try{
     res.status(200).json({
         success:true,
         message:'data retrived successfully',
-        data:result.rows
+        data:result 
     })
 }catch (err:any) {
         res.status(500).json({
@@ -34,7 +34,7 @@ const updateUser =async(req:Request,res:Response)=>{
         res.status(200).json({
             success:true,
             message:'User updates successfully',
-            data:result.rows[0]
+            data:result 
         })
     }
     }catch(err:any){
@@ -60,7 +60,7 @@ const deleteUser =async(req:Request,res:Response)=>{
         res.status(200).json({
             success:true,
             message:'User deleted successfully',
-            data:result.rows
+            data:result 
         })
     }
     }catch(err:any){

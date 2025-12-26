@@ -8,7 +8,7 @@ const createVehicles =async(req:Request,res:Response)=>{
         res.status(201).json({
             success:true,
             message:'Vehicle created successfully',
-            data:result.rows[0]
+            data:result 
         })
    }catch(err:any){
     res.status(500).json({
@@ -25,7 +25,7 @@ const getAllVehicles =async(req:Request,res:Response)=>{
          res.status(404).json({
         success:true,
          message: "No vehicles found",
-         data:result.rows
+         data:result.rows 
     }) }
     else{
           res.status(200).json({

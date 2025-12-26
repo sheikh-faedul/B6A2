@@ -73,7 +73,7 @@ const createBookings = async (payload: CreateBookingPayload ) => {
     [vehicle_id]
   );
 
-  return bookingResult;
+  return bookingResult.rows[0];
 };
 
 const getBookings = async (role:string,tokenId:number) => {
@@ -82,7 +82,7 @@ const getBookings = async (role:string,tokenId:number) => {
      const result = await pool.query(`
             SELECT * FROM bookings 
             `)
-    return result;  
+    return result.rows;  
      
     }
  
@@ -91,7 +91,7 @@ const getBookings = async (role:string,tokenId:number) => {
         SELECT * FROM bookings WHERE customer_id =$1
         `,[tokenId])
     
-        return customerBooking;
+        return customerBooking.rows;
      }
     throw new Error('Unauthorise')
      
@@ -101,9 +101,7 @@ const updateBookings = async (role:string,tokenId:number,status: string, id:stri
   const getBookings = await pool.query(`
     SELECT * FROM bookings WHERE id=$1
     `,[id]);
-    if (getBookings.rows.length === 0){
-      throw new Error('Bookings not found')
-    }
+    
     const booking = getBookings.rows[0];
 
   if(role==="admin"){
@@ -117,7 +115,7 @@ const updateBookings = async (role:string,tokenId:number,status: string, id:stri
        await pool.query(`
     UPDATE vehicles SET status='available' WHERE id=$1
     `,[booking.vehicle_id])
-    return result
+    return result.rows[0]
   }
 
   if(role === "customer"){
@@ -125,7 +123,7 @@ const updateBookings = async (role:string,tokenId:number,status: string, id:stri
       if (booking.customer_id !== tokenId) {
       throw new Error("Forbidden: cannot cancel another user's booking");
     }
-    
+
     if(status !== 'cancelled'){
       throw new Error('customer can only booking cancel')
     }
@@ -137,7 +135,7 @@ const updateBookings = async (role:string,tokenId:number,status: string, id:stri
      const result = await pool.query(`
       UPDATE  bookings SET status=$1 WHERE id=$2 RETURNING *
       `,[status,id])
-      return result;
+      return result.rows[0];
 
   }
   throw new Error('Unauthorize')

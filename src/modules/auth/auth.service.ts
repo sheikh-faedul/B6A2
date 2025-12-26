@@ -11,7 +11,7 @@ const  singupUser =async(payload:Record<string,unknown>)=>{
             INSERT INTO users(name,email,password,phone,role) VALUES($1,$2,$3,$4,$5) RETURNING id,name, email,phone,role
             `,[name,email,hashPassword,phone,role])
             
-        return result;    
+        return result.rows[0];    
 }
 
 const singinUser =async(email:string,password:string)=>{

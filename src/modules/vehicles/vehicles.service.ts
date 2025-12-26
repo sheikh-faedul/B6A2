@@ -5,7 +5,7 @@ const createVehicles = async (vehicle_name: string, type: string, registration_n
     const result = await pool.query(`
         INSERT INTO vehicles(vehicle_name,type,registration_number,daily_rent_price,availability_status) VALUES($1,$2,$3,$4,$5) RETURNING *
         `, [vehicle_name, type, registration_number, daily_rent_price, availability_status])
-    return result;
+    return result.rows[0];
 }
 const getAllVehicles = async () => {
     const result = await pool.query(`
