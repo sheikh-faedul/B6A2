@@ -1,43 +1,55 @@
+import { error } from "console";
 import { pool } from "../../config/db"
 
-const createVehicles = async(vehicle_name:string,type:string,registration_number:string,daily_rent_price:number,availability_status:string)=>{
-     const result = await pool.query(`
+const createVehicles = async (vehicle_name: string, type: string, registration_number: string, daily_rent_price: number, availability_status: string) => {
+    const result = await pool.query(`
         INSERT INTO vehicles(vehicle_name,type,registration_number,daily_rent_price,availability_status) VALUES($1,$2,$3,$4,$5) RETURNING *
-        `,[vehicle_name,type,registration_number,daily_rent_price,availability_status])
-        return result;
+        `, [vehicle_name, type, registration_number, daily_rent_price, availability_status])
+    return result;
 }
-const getAllVehicles=async()=>{
- const result = await pool.query(`
+const getAllVehicles = async () => {
+    const result = await pool.query(`
             SELECT * FROM vehicles
             `)
-            return result;
+    return result;
 }
 
-const getSingleVehicles=async(id :string)=>{
- const result = await pool.query(`
+const getSingleVehicles = async (id: string) => {
+    const result = await pool.query(`
          SELECT * FROM vehicles WHERE id=$1   
-         `,[id])
-         return result
+         `, [id])
+    return result
 }
 
-const updatesVehicles =async( availability_status:string,id:string)=>{
+const updatesVehicles = async (availability_status: string, id: string) => {
     const result = await pool.query(`
       UPDATE vehicles SET  availability_status=$1 WHERE id=$2 RETURNING *
-      `,[availability_status,id])
-      return result;
+      `, [availability_status, id])
+    return result;
 }
 
-const deleteVehicles = async(id:string)=>{
- const result= await pool.query(`
+const deleteVehicles = async (id: string) => {
+    const status = await pool.query(`
+        SELECT availability_status FROM vehicles WHERE id=$1
+        `, [id]);
+    if (status.rowCount === 0) {
+        throw new Error("vehicle not found")
+    }
+    const bookedStatus = status.rows[0].availability_status;
+    if (bookedStatus === 'booked') {
+        throw new Error('vehicles is booked')
+    }
+
+    const result = await pool.query(`
     DELETE FROM vehicles WHERE id=$1
-    `,[id])
+    `, [id])
     return result;
 }
 export const vehiclesService = {
     createVehicles,
-   getAllVehicles,
-   getSingleVehicles,
-   updatesVehicles,
-   deleteVehicles
+    getAllVehicles,
+    getSingleVehicles,
+    updatesVehicles,
+    deleteVehicles
 
 }

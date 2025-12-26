@@ -2,10 +2,6 @@ import { Request, Response } from "express";
 import { bookingService } from "./bookings.service";
 
 const createBookings = async(req:Request,res:Response)=>{
-//     const{ customer_id,
-//   vehicle_id,
-//   rent_start_date,
-//   rent_end_date}=req.body;
   try{
     const result= await bookingService.createBookings( req.body);
   res.status(201).json({
@@ -22,13 +18,17 @@ const createBookings = async(req:Request,res:Response)=>{
 }
 
 const getBookings =  async(req:Request,res:Response)=>{
+    const{role,id:tokenId}=req.user!;
+      
     try{
-        const result = await bookingService.getBookings(req.params.id as string);
+        const result = await bookingService.getBookings(role,tokenId);
+        
          res.status(200).json({
             success:true,
             message:'booking retrived successfully',
-            data:result.rows[0]
-         })   
+            data:result.rows
+         })  
+         
     }catch(err:any){
         res.status(500).json({
             success:false,
@@ -39,8 +39,9 @@ const getBookings =  async(req:Request,res:Response)=>{
 
 const updateBookings =async(req:Request,res:Response)=>{
     const {status}=req.body;
+    const {role,id:tokenId}=req.user!
     try{
-        const result = await bookingService.updateBookings(status,req.params.id as string);
+        const result = await bookingService.updateBookings(role,tokenId,status,req.params.id as string);
              
         if(result.rowCount === 0){
          res.status(404).json({

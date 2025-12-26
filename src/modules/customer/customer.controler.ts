@@ -18,9 +18,11 @@ try{
 }
 
 const updateUser =async(req:Request,res:Response)=>{
-    const{name,email,password,phone}=req.body
+    const{name}=req.body;
+    const {role,id:tokenId}=req.user!;
+             
     try{
-         const result = await customerServices.updateUser(name,email,password,phone,req.params.id as string)
+         const result = await customerServices.updateUser(name,role,tokenId,req.params.id as string)
 
     if(result.rows.length === 0){
          res.status(404).json({
