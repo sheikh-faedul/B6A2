@@ -1,10 +1,22 @@
-import app from "./app"
-import config from "./config";
+ 
 
-const port = config.port;
-app.get('/', (req, res) => {
-  res.send('server is running')
-})
-app.listen(5000, () => {
-    console.log(`server is running ${port}`)
-})
+ 
+import app from "./app";
+ 
+const PORT = process.env.PORT || 3000;
+
+async function main() {
+    try {
+         console.log("Connected to the database successfully.");
+
+        app.listen(PORT, () => {
+            console.log(`Server is running on http://localhost:${PORT}`);
+        });
+    } catch (error) {
+        console.error("An error occurred:", error);
+         process.exit(1);
+    }
+}
+
+main();
+ 
